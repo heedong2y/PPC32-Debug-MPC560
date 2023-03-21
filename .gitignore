@@ -1,3 +1,8 @@
+
+# out folder
+./RAM
+./FLASH
+
 # Prerequisites
 *.d
 
@@ -5,7 +10,6 @@
 *.o
 *.ko
 *.obj
-*.elf
 
 # Linker output
 *.ilk
@@ -17,20 +21,11 @@
 *.pch
 
 # Libraries
-*.lib
 *.a
 *.la
 *.lo
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
 # Executables
-*.exe
-*.out
 *.app
 *.i*86
 *.x86_64
@@ -43,7 +38,6 @@
 *.pdb
 
 # Kernel Module Compile Results
-*.mod*
 *.cmd
 .tmp_versions/
 modules.order
