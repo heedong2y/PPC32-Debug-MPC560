@@ -1,7 +1,7 @@
 
 # out folder
-./RAM
-./FLASH
+./workdir/ppc32-cpu-test/RAM/*
+./workdir/ppc32-cpu-test/FLASH/*
 
 # Prerequisites
 *.d
