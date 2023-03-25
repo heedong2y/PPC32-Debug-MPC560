@@ -2,6 +2,8 @@
 # out folder
 ./workdir/ppc32-cpu-test/RAM/*
 ./workdir/ppc32-cpu-test/FLASH/*
+./workdir/RemoteSystemsTempFiles
+./workdir/.metadata
 
 # Prerequisites
 *.d
