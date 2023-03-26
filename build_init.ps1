@@ -2,13 +2,16 @@
 ### Author : Hee Dong Yang (heedong@kaist.ac.kr)
 
 $source = Get-Location
-$file = "tool.tar"
-$url = "Path/to/"
 
 
-# Invoke-WebRequest -Uri $url -OutFile .\$file
+if ($args[0] -eq "clean") { 
+	& .\Tools\eclipse\ecd.exe build -data $source\workdir\ -project $source\workdir\ppc32-cpu-test --config RAM -cleanBuild
+	cp .\Tools\gnu\bin\make.exe .\workdir\ppc32-cpu-test\RAM
+} 
 
-tar -xvf "$source\$file" -C $source
-
-# Build Project build-clean
-& .\Tools\eclipse\ecd.exe build -data $source\workdir\ -project $source\workdir\ppc32-cpu-test --config RAM -cleanBuild
+else {
+    cd .\workdir\ppc32-cpu-test\RAM
+	.\make.exe clean
+	.\make.exe all
+	cd ..\..\..\
+}
