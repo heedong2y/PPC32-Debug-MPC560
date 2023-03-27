@@ -2,6 +2,7 @@
 
 int main(void) {
 	    __asm__ (
-	        "add 6, 7, 8 \n"
+	        "nop \n"
+			/// insert testing intruction of PPC32
 	    );
 }

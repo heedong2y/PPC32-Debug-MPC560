@@ -1,6 +1,3 @@
-import os
-import re
-
 ### Pasing Script for Debug result
 ### Hee Dong Yang (heedong@kaist.ac.kr)
 

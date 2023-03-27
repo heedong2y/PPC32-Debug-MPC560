@@ -1,5 +1,5 @@
 ### Powershell Script for PPC ELF make
-### Author : Hee Dong Yang (heedong@kaist.ac.kr)
+### Hee Dong Yang (heedong@kaist.ac.kr)
 
 $source = Get-Location
 $file = "tool.tar"
