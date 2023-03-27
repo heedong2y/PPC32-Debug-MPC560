@@ -1,5 +1,5 @@
-### Pasing Script for Debug result
-### Hee Dong Yang (heedong@kaist.ac.kr)
+# Pasing Script for Debug result
+# Hee Dong Yang (heedong@kaist.ac.kr)
 
 DEBUG_BEFORE_PATH = './debug-output/before_snapshot.log'
 DEBUG_AFTER_PATH = './debug-output/after_snapshot.log'
@@ -26,7 +26,6 @@ def log_parsing(path):
 def main():
     beforeRegs = log_parsing(DEBUG_BEFORE_PATH)
     afterRegs = log_parsing(DEBUG_AFTER_PATH)
-
     print("Before >")
     print(beforeRegs)
     print("After > ")

@@ -5,6 +5,9 @@
 ./workdir/RemoteSystemsTempFiles
 ./workdir/.metadata
 
+# macOS temp
+.DS_Store
+
 # Prerequisites
 *.d
 
