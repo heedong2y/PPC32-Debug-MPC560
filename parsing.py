@@ -29,11 +29,15 @@ def log_parsing(path):
 def main():
     beforeRegs = log_parsing(DEBUG_BEFORE_PATH)
     afterRegs = log_parsing(DEBUG_AFTER_PATH)
-    print (beforeRegs)
 
+    print("Before >")
+    print(beforeRegs)
+    print("After > ")
+    print(afterRegs)
+    print("Diff:")
     for key in beforeRegs:
         if key in afterRegs and beforeRegs[key] != afterRegs[key]:
-            print(f"Key '{key}' has different values: '{beforeRegs[key]}' vs '{afterRegs[key]}'")
+            print(f"Register '{key}': '{beforeRegs[key]}' -> '{afterRegs[key]}'")
 
 
 if __name__ == '__main__':
