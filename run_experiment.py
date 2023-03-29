@@ -113,9 +113,9 @@ def get_debug_result(outdir):
             regs = log_parsing(os.path.join(outdir, file_name))
             reg_values.append(regs)
 
-    with open(outdir + "/debug.mac", "w") as file:
+    with open(outdir + "/result", "w") as file:
         for i in range(len(reg_values) - 1):
-            print_diff(file, reg_values[i], reg_values[i + 1])
+            write_diff(file, reg_values[i], reg_values[i + 1])
 
 
 def main():
