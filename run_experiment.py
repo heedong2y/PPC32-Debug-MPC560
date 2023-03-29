@@ -3,7 +3,7 @@ import subprocess
 
 #
 # PPC32 Instruction Debug Experiment Script on MPC5606B (using Windows Git bash)
-# cd
+# 
 
 BASE_DIR = os.getcwd()
 CONFIG_DIR = BASE_DIR + "/config/"
@@ -15,7 +15,7 @@ MPC5606B_PREFIX = '#include "MPC5606B.h"\n'
 MAIN_PREFIX = 'int main(void) { \n\t __asm__ ( \n\t\t"'
 MAIN_POSTFIX = '\\n"\n\t);\n}'
 
-reg_name = ['PC', 'CR', 'MSR', 'LR', 'XER', 'CTR', 'R0', 'R1', 'R2', 'R3', 'R4',
+ppc32_reg_name = ['PC', 'CR', 'MSR', 'LR', 'XER', 'CTR', 'R0', 'R1', 'R2', 'R3', 'R4',
             'R5', 'R6', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'R13', 'R14', 'R15']
 
 
@@ -32,7 +32,6 @@ def load_reg_info(inputpath):
     reg_info = [line.rstrip() for line in reg_file.readlines()]
     return reg_info
 
-
 def decide_outdir():
     prefix = "exp"
     i = 0
@@ -43,7 +42,7 @@ def decide_outdir():
             return outdir
 
 
-# main.c
+# Generate main.c
 def gen_mainc(inline_code, outdir):
     boardMain = MPC5606B_PREFIX + MAIN_PREFIX + '\\n" \n\t\t"'.join(inline_code) + MAIN_POSTFIX
     # qemuMain = + MAIN_PREFIX + '\\n" \n\t\t"'.join(inline_code) + MAIN_POSTFIX
@@ -56,7 +55,7 @@ def gen_mainc(inline_code, outdir):
     #     f2.write(qemuMain)
 
 
-# debug macro
+# Generate debugging macro
 def gen_macro(set_regs, inline_code, outdir):
     macro_code = list()
     macro_code.append(MACRO_PREFIX)
@@ -72,7 +71,7 @@ def gen_macro(set_regs, inline_code, outdir):
     print("\n[*] macro script is generated")
     return outdir + "/debug.mac"
 
-
+# debug logfile parsing
 def log_parsing(path):
     registers = {}
     f = open(path, "r")
@@ -80,7 +79,7 @@ def log_parsing(path):
         # print (line)
         words = line.replace('*', "").split()
         try:
-            if words[0] in reg_name:
+            if words[0] in ppc32_reg_name:
                 registers[words[0]] = words[1]
                 registers[words[2]] = words[3]
             elif words[1] == '<Inst>':
@@ -95,17 +94,17 @@ def write_diff(file, before_regs, after_regs):
     file.write("-------------------------------\n")
     file.write(f"\n [Inst] {after_regs['inst']}\n")
     file.write("\nBefore:\n")
-    for reg in reg_name:
+    for reg in ppc32_reg_name:
         file.write("{0} = {1}\n".format(reg, before_regs[reg]))
     file.write("\nAfter:\n")
-    for reg in reg_name:
+    for reg in ppc32_reg_name:
         file.write("{0} = {1}\n".format(reg, after_regs[reg]))
     file.write("\nDiff:\n")
     for key in before_regs:
         if key in after_regs and before_regs[key] != after_regs[key] and key != 'inst':
             file.write(f"Register {key}: {before_regs[key]} -> {after_regs[key]}\n")
 
-
+# Generate result file
 def get_debug_result(outdir):
     reg_values = []
     for file_name in os.listdir(outdir):
@@ -119,16 +118,20 @@ def get_debug_result(outdir):
 
 
 def main():
+    # asm.config/reg.config load
     inline_code = gen_asm(CONFIG_DIR)
     set_regs = load_reg_info(CONFIG_DIR)
 
     outdir = decide_outdir()
     os.makedirs(outdir)
+
+    # test setting
     gen_mainc(inline_code, outdir)
     macro = gen_macro(set_regs, inline_code, outdir)
-    os.system('sh build.sh')
-    subprocess.run([DEBUG_PROGRAM_PATH, "-scriptfile", macro], stdout=subprocess.PIPE)
-    get_debug_result(outdir)
+    
+    os.system('sh build.sh') # test binary build
+    subprocess.run([DEBUG_PROGRAM_PATH, "-scriptfile", macro], stdout=subprocess.PIPE) # debugging
+    get_debug_result(outdir) # debug logfile parsing & report
 
 
 if __name__ == '__main__':
