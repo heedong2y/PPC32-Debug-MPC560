@@ -15,6 +15,9 @@ MPC5606B_PREFIX = '#include "MPC5606B.h"\n'
 MAIN_PREFIX = 'int main(void) { \n\t __asm__ ( \n\t\t"'
 MAIN_POSTFIX = '\\n"\n\t);\n}'
 
+reg_name = ['PC', 'CR', 'MSR', 'LR', 'XER', 'CTR', 'R0', 'R1', 'R2', 'R3', 'R4',
+            'R5', 'R6', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'R13', 'R14', 'R15']
+
 
 # Temporarily set to load a file without generating
 def gen_asm(inputpath):
@@ -66,12 +69,11 @@ def gen_macro(set_regs, inline_code, outdir):
     # file write
     with open(outdir + "/debug.mac", "w") as f3:
         f3.writelines(macro_code)
+    print("\n[*] macro script is generated")
     return outdir + "/debug.mac"
 
 
 def log_parsing(path):
-    reg_name = ['PC', 'MSR', 'LR', 'R0', 'R1', 'R2', 'R3', 'R4', 'R5', 'R6',
-                'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'R13', 'R14', 'R15']
     registers = {}
     f = open(path, "r")
     for line in f.readlines():
@@ -81,21 +83,27 @@ def log_parsing(path):
             if words[0] in reg_name:
                 registers[words[0]] = words[1]
                 registers[words[2]] = words[3]
+            elif words[1] == '<Inst>':
+                registers['inst'] = ' '.join(words[2:])
         except:
             continue
 
     return registers
 
 
-def print_diff(before_regs, after_regs):
-    print("Before >")
-    print(before_regs)
-    print("After > ")
-    print(after_regs)
-    print("Diff:")
+def write_diff(file, before_regs, after_regs):
+    file.write("-------------------------------\n")
+    file.write(f"\n [Inst] {after_regs['inst']}\n")
+    file.write("\nBefore:\n")
+    for reg in reg_name:
+        file.write("{0} = {1}\n".format(reg, before_regs[reg]))
+    file.write("\nAfter:\n")
+    for reg in reg_name:
+        file.write("{0} = {1}\n".format(reg, after_regs[reg]))
+    file.write("\nDiff:\n")
     for key in before_regs:
-        if key in after_regs and before_regs[key] != after_regs[key]:
-            print(f"Register '{key}': '{before_regs[key]}' -> '{after_regs[key]}'")
+        if key in after_regs and before_regs[key] != after_regs[key] and key != 'inst':
+            file.write(f"Register {key}: {before_regs[key]} -> {after_regs[key]}\n")
 
 
 def get_debug_result(outdir):
@@ -105,8 +113,9 @@ def get_debug_result(outdir):
             regs = log_parsing(os.path.join(outdir, file_name))
             reg_values.append(regs)
 
-    for i in range(len(reg_values) - 1):
-        print_diff(reg_values[i], reg_values[i + 1])
+    with open(outdir + "/debug.mac", "w") as file:
+        for i in range(len(reg_values) - 1):
+            print_diff(file, reg_values[i], reg_values[i + 1])
 
 
 def main():
