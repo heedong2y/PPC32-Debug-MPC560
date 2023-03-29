@@ -1,8 +1,8 @@
-### Pasing Script for Debug result
-### Hee Dong Yang (heedong@kaist.ac.kr)
+# Pasing Script for Debug result
+# Hee Dong Yang (heedong@kaist.ac.kr)
 
-DEBUG_BEFORE_PATH = './debug-output/before_snapshot.log'
-DEBUG_AFTER_PATH = './debug-output/after_snapshot.log'
+DEBUG_BEFORE_PATH = './output/exp-3/sanpshot0.log'
+DEBUG_AFTER_PATH = './output/exp-3/sanpshot1.log'
 conStr = ['PC', 'MSR', 'LR', 'R0', 'R1', 'R2', 'R3', 'R4', 'R5', 'R6',
           'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'R13', 'R14', 'R15']
 
@@ -17,6 +17,8 @@ def log_parsing(path):
             if words[0] in conStr:
                 registers[words[0]] = words[1]
                 registers[words[2]] = words[3]
+            elif words[1] == '<Inst>':
+                print(' '.join(words[2:]))
         except:
             continue
 
@@ -26,7 +28,6 @@ def log_parsing(path):
 def main():
     beforeRegs = log_parsing(DEBUG_BEFORE_PATH)
     afterRegs = log_parsing(DEBUG_AFTER_PATH)
-
     print("Before >")
     print(beforeRegs)
     print("After > ")

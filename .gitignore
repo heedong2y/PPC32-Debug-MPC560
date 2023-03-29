@@ -5,6 +5,12 @@
 ./workdir/RemoteSystemsTempFiles
 ./workdir/.metadata
 
+# main.c
+./workdir/ppc32-cpu-test/Sources/main.c
+
+# macOS temp
+.DS_Store
+
 # Prerequisites
 *.d
 
