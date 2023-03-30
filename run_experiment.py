@@ -15,8 +15,9 @@ MPC5606B_PREFIX = '#include "MPC5606B.h"\n'
 MAIN_PREFIX = 'int main(void) { \n\t __asm__ ( \n\t\t"'
 MAIN_POSTFIX = '\\n"\n\t);\n}'
 
-ppc32_reg_name = ['PC', 'CR', 'MSR', 'LR', 'XER', 'CTR', 'R0', 'R1', 'R2', 'R3', 'R4',
-            'R5', 'R6', 'R7', 'R8', 'R9', 'R10', 'R11', 'R12', 'R13', 'R14', 'R15']
+ppc32_reg_name = ['PC', 'CR', 'MSR', 'LR', 'XER', 'CTR', 'R0', 'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7',
+                  'R8', 'R9', 'R10', 'R11', 'R12', 'R13', 'R14', 'R15', 'R16', 'R17', 'R18', 'R19', 'R20',
+                  'R21', 'R22', 'R23', 'R24', 'R25', 'R26', 'R27', 'R28', 'R29', 'R30', 'R31']
 
 
 # Temporarily set to load a file without generating
@@ -31,6 +32,7 @@ def load_reg_info(inputpath):
     reg_file = open(inputpath + "reg.conf", "r")
     reg_info = [line.rstrip() for line in reg_file.readlines()]
     return reg_info
+
 
 def decide_outdir():
     prefix = "exp"
@@ -69,7 +71,8 @@ def gen_macro(set_regs, inline_code, outdir):
     with open(outdir + "/debug.mac", "w") as f3:
         f3.writelines(macro_code)
     print("\n[*] macro script is generated")
-    return outdir + "/debug.mac"
+    return outdir + "\debug.mac"
+
 
 # debug logfile parsing
 def log_parsing(path):
@@ -92,17 +95,24 @@ def log_parsing(path):
 
 def write_diff(file, before_regs, after_regs):
     file.write("-------------------------------\n")
-    file.write(f"\n [Inst] {after_regs['inst']}\n")
+    file.write(f"\n[RUN] {after_regs['inst']}\n")
     file.write("\nBefore:\n")
-    for reg in ppc32_reg_name:
-        file.write("{0} = {1}\n".format(reg, before_regs[reg]))
-    file.write("\nAfter:\n")
-    for reg in ppc32_reg_name:
-        file.write("{0} = {1}\n".format(reg, after_regs[reg]))
-    file.write("\nDiff:\n")
+    # write before reg
+    for i, reg in enumerate(ppc32_reg_name):
+        file.write("{0} = {1} ".format(reg, before_regs[reg]))
+        if (i + 1) % 5 == 0:
+            file.write("\n")
+    # write after reg
+    file.write("\n\nAfter:\n")
+    for i, reg in enumerate(ppc32_reg_name):
+        file.write("{0} = {1} ".format(reg, after_regs[reg]))
+        if (i + 1) % 5 == 0:
+            file.write("\n")
+    file.write("\n\nDiff:\n")
     for key in before_regs:
         if key in after_regs and before_regs[key] != after_regs[key] and key != 'inst':
-            file.write(f"Register {key}: {before_regs[key]} -> {after_regs[key]}\n")
+            file.write(f"{key}: {before_regs[key]} -> {after_regs[key]}\n")
+
 
 # Generate result file
 def get_debug_result(outdir):
@@ -112,7 +122,7 @@ def get_debug_result(outdir):
             regs = log_parsing(os.path.join(outdir, file_name))
             reg_values.append(regs)
 
-    with open(outdir + "/result", "w") as file:
+    with open(outdir + "/result.txt", "w") as file:
         for i in range(len(reg_values) - 1):
             write_diff(file, reg_values[i], reg_values[i + 1])
 
@@ -128,10 +138,13 @@ def main():
     # test setting
     gen_mainc(inline_code, outdir)
     macro = gen_macro(set_regs, inline_code, outdir)
-    
-    os.system('sh build.sh') # test binary build
-    subprocess.run([DEBUG_PROGRAM_PATH, "-scriptfile", macro], stdout=subprocess.PIPE) # debugging
-    get_debug_result(outdir) # debug logfile parsing & report
+
+    subprocess.run(['sh', 'build.sh'], stdout=subprocess.PIPE)# test binary build
+    print("\n[*] test binary is generated")
+    subprocess.run([DEBUG_PROGRAM_PATH, "-scriptfile", macro], stdout=subprocess.PIPE)  # debugging
+    print("\n[*] debugging complete")
+    get_debug_result(outdir)  # debug logfile parsing & report
+    print("\n[*] test result : {}\\result.txt".format(outdir))
 
 
 if __name__ == '__main__':
