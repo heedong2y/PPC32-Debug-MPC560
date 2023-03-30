@@ -99,19 +99,19 @@ def write_diff(file, before_regs, after_regs):
     file.write("\nBefore:\n")
     # write before reg
     for i, reg in enumerate(ppc32_reg_name):
-        file.write("{0} = {1} ".format(reg, before_regs[reg]))
+        file.write("{0} = 0x{1} ".format(reg, before_regs[reg]))
         if (i + 1) % 5 == 0:
             file.write("\n")
     # write after reg
     file.write("\n\nAfter:\n")
     for i, reg in enumerate(ppc32_reg_name):
-        file.write("{0} = {1} ".format(reg, after_regs[reg]))
+        file.write("{0} = 0x{1} ".format(reg, after_regs[reg]))
         if (i + 1) % 5 == 0:
             file.write("\n")
     file.write("\n\nDiff:\n")
     for key in before_regs:
         if key in after_regs and before_regs[key] != after_regs[key] and key != 'inst':
-            file.write(f"{key}: {before_regs[key]} -> {after_regs[key]}\n")
+            file.write(f"{key}: 0x{before_regs[key]} -> 0x{after_regs[key]}\n")
 
 
 # Generate result file
