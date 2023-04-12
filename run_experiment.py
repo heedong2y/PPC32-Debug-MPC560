@@ -145,7 +145,9 @@ def main():
     print("\n[*] debugging complete")
     get_debug_result(outdir)  # debug logfile parsing & report
     print("\n[*] test result : {}\\result.txt".format(outdir))
-
+    # open result file
+    subprocess.run(['notepad', outdir + "/result.txt"], stdout=subprocess.PIPE)
+    
 
 if __name__ == '__main__':
     main()
