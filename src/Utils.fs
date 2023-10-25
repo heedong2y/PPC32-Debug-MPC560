@@ -1,4 +1,4 @@
-module PPC32DebugMPC560
+module PPC32DebugMPC560.Utils
 
 open System
 open System.IO

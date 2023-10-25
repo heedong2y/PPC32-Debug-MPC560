@@ -1,9 +1,9 @@
 // PPC32 Instruction Debug Experiment Script on MPC5606B
 // Hee Dong Yang (heedong@kaist.ac.kr)
 
-#load "src/Utils.fs"
+#r "bin/Release/net7.0/PPC32-Debug-MPC560.dll"
 
-open PPC32DebugMPC560
+open PPC32DebugMPC560.Utils
 open System
 open System.IO
 
@@ -65,13 +65,18 @@ let main () =
   let outdir = decideOutdir()
   Directory.CreateDirectory(outdir) |> ignore
 
+  /// Make Main.c
   genMainc inlineAsm outdir
+
+  // Make macro file
   let macro = genMacro inlineAsm outdir
+
+  // Complie
   build BaseDir false
 
-
-  let argStr = "-scriptfile " + macro
-  executeCommand DebugProgramPath argStr true
+  // Run
+  //let argStr = "-scriptfile " + macro
+  //executeCommand DebugProgramPath argStr true
 
 
 main()

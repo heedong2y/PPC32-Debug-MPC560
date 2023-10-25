@@ -1,6 +1,9 @@
-#load "src/Utils.fs"
+// PPC32 Debug Test
+// Hee Dong Yang (heedong@kaist.ac.kr)
 
-open PPC32DebugMPC560
+#r "bin/Release/net7.0/PPC32-Debug-MPC560.dll"
+
+open PPC32DebugMPC560.Utils
 open System.IO
 
 let source = Directory.GetCurrentDirectory()

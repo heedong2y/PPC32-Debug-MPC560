@@ -1,9 +1,9 @@
 // F# Script for PPC ELF make
 // Hee Dong Yang (heedong@kaist.ac.kr)
 
-#load "src/Utils.fs"
+#r "bin/Release/net7.0/PPC32-Debug-MPC560.dll"
 
-open PPC32DebugMPC560
+open PPC32DebugMPC560.Utils
 open System.IO
 
 let source = Directory.GetCurrentDirectory()
