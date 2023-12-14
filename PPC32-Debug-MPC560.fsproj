@@ -1,14 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+	<OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>PPC32_Debug_MPC560</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="src/Utils.fs" />
-    <Compile Include="src/PPC32Type.fs" />
+	<Compile Include="src/PPC32Type.fs" />
+	<Compile Include="src/Utils.fs" />
+	<Compile Include="src/RunTest.fs" />
   </ItemGroup>
 
 </Project>
