@@ -6,3 +6,4 @@ This repository contains scripts that make it easy to obtain PPC32 register valu
 - Windows OS/Server
 - MPC5606B borad
 - DEBUG Tools for MPC5606B
+- dotnet 7.0

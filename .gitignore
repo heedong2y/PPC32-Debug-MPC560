@@ -46,6 +46,10 @@
 *.idb
 *.pdb
 
+# dotnet compile
+./bin
+./obj
+
 # Kernel Module Compile Results
 *.cmd
 .tmp_versions/
